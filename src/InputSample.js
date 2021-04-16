@@ -1,20 +1,30 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 
 function InputSample(){
-    const [text, setText] = useState('');
+    const [inputs, setInputs] = useState({
+        name: '',
+        nickname: ''
+    });
+    const { name, nickname } = inputs;
     const onChange = (event) => {
-        setText(event.target.value);
-    };
-    const handleReset = () => {
-        setText('');
-    };
+        const {name, value} = event.target;
+        setInputs({
+            ...inputs,
+            [name] : value
+        });
+    }
+    const onReset = () => {
+        setInputs({
+            name: '',
+            nickname: ''
+        })
+    }
     return (
         <div>
-            <input onChange={onChange} value={text}/>
-            <button onClick={handleReset}>초기화</button>
-            <div>
-                <b>값: {text}</b>
-            </div>
+            <input name="name" onChange={onChange} value={name}/>
+            <input name="nickname" onChange={onChange} value={nickname}/>
+            <button onClick={onReset}>초기화</button>
+            <div>값: {name}({nickname})</div>
         </div>
     )
 }
