@@ -1,4 +1,4 @@
-import React,{ useRef, useState } from "react";
+import React, {useState , useRef} from "react";
 import "./App.css";
 import CreateUser from './CreateUser';
 import UserList from './UserList';
@@ -6,17 +6,34 @@ import UserList from './UserList';
 function App() {
   const [inputs, setInputs] = useState({
     username: '',
-    email: ''
+    email : ''
   });
   const {username, email} = inputs;
   const onChange = (event) => {
     const {name, value} = event.target;
     setInputs({
       ...inputs,
-      [name]: value
+      [name] : value
     });
-  };
+  }
+  const nextId = useRef(4);
 
+  const onCreate = () => {
+    const user = {
+      id : nextId.current,
+      username : username,
+      email : email
+    }
+    setUsers([
+      ...users,
+      user
+    ]);
+    nextId.current += 1;
+    setInputs({
+      username: '',
+      email: ''
+    })
+  };
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -35,31 +52,14 @@ function App() {
     }
   ]);
 
-  const nextId = useRef(4);
-    
-  const onCreate = () => {
-    const user = {
-      id: nextId.current,
-      username,
-      email
-    };
-    setUsers(users.concat(user));
-    setInputs({
-      username: '',
-      email: ''
-    });
-    nextId.current += 1;
+  const onRemove = (id) => {
+    setUsers(users.filter(user => user.id !== id));
   };
 
   return (
     <>
-      <CreateUser
-        username={username}
-        email={email}
-        onChange={onChange}
-        onCreate={onCreate}
-      />
-      <UserList users={users}/>
+      <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate}/>
+      <UserList users={users} onRemove={onRemove}/>
     </>
   );
 }
