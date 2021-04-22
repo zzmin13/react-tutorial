@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-function User({id, username, email, onRemove, active, onToggle}){
+function User({user, onRemove, onToggle}){
+    const {id, username, email, active} = user;
+    useEffect(() => {
+        console.log(`값이 설정됨`);
+        console.log(user);
+        return () => {
+            console.log(`값이 바뀌기 전`);
+            console.log(user);
+        }
+    },[user]);
     return (
         <div>
             <b
@@ -20,12 +29,9 @@ function UserList({users, onRemove, onToggle}){
   return (
       users.map((user) => {
           return <User
+          user={user}
           key={user.id}
-          id={user.id}
-          username={user.username}
-          email={user.email}
           onRemove={onRemove}
-          active={user.active}
           onToggle={onToggle}
           />
       })
