@@ -1,9 +1,10 @@
 import React from "react";
 
-function User({user, onRemove, onToggle}){
+const User = React.memo(function User({user, onRemove, onToggle}){
     const {id, username, email, active} = user;
     return (
         <div>
+            {console.log(`User 컴포넌트(${username})가 렌더링 되었습니다.`)}
             <b
             style={{
               color: active ? 'green' : 'black',
@@ -16,7 +17,8 @@ function User({user, onRemove, onToggle}){
             <button onClick={() => onRemove(id)}>삭제</button>
         </div>
     )
-}
+});
+
 function UserList({users, onRemove, onToggle}){
   return (
       users.map((user) => {
@@ -26,8 +28,8 @@ function UserList({users, onRemove, onToggle}){
           onRemove={onRemove}
           onToggle={onToggle}
           />
-      })
+        })
   )
 }
 
-export default UserList;
+export default React.memo(UserList);

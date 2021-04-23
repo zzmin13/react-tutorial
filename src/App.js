@@ -4,9 +4,9 @@ import CreateUser from './CreateUser';
 import UserList from './UserList';
 
 function countActiveUsers(users){
-  console.log(`활성 사용자를 세는 중 ...`);
   return users.filter((user) => user.active).length;
-}
+};
+
 function App() {
   const [inputs, setInputs] = useState({
     username: '',
@@ -49,25 +49,22 @@ function App() {
       username : username,
       email : email
     }
-    setUsers([
-      ...users,
-      user
-    ]);
+    setUsers(users => users.concat(user));
     nextId.current += 1;
     setInputs({
       username: '',
       email: ''
     })
-  }, [username, email, users]);
+  }, [username, email]);
 
   const onRemove = useCallback((id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  },[users]);
+    setUsers(users => users.filter((user) => user.id !== id));
+  },[]);
   
   const onToggle = useCallback((id) => {
-    setUsers(users.map((user) => user.id === id ? {...user, active: !user.active} : user));
-  },[users]);
-  
+    setUsers(users => users.map((user) => user.id === id ? {...user, active: !user.active} : user));
+  },[]);
+
   const count = useMemo(() => countActiveUsers(users), [users]);
 
   return (
