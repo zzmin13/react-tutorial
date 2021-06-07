@@ -1,16 +1,13 @@
 import React, { useReducer, useRef, useMemo, useCallback } from "react";
 import "./App.css";
 import CreateUser from "./CreateUser";
+import useInputs from "./useInputs";
 import UserList from "./UserList";
 
 function countActiveUsers(users) {
   return users.filter((user) => user.active).length;
 }
 const initialState = {
-  inputs: {
-    username: "",
-    email: "",
-  },
   users: [
     {
       id: 1,
@@ -34,17 +31,8 @@ const initialState = {
 };
 const reducer = (state, action) => {
   switch (action.type) {
-    case "CHANGE_INPUT":
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.name]: action.value,
-        },
-      };
     case "CREATE_USER":
       return {
-        inputs: initialState.inputs,
         users: state.users.concat(action.user),
       };
     case "REMOVE_USER":
@@ -65,21 +53,13 @@ const reducer = (state, action) => {
 };
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [form, onChange, reset] = useInputs({
+    username: "",
+    email: "",
+  });
+  const { username, email } = form;
   const nextId = useRef(4);
-  const {
-    inputs: { username, email },
-    users,
-  } = state;
-
-  const onChange = useCallback((event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    dispatch({
-      type: "CHANGE_INPUT",
-      name,
-      value,
-    });
-  }, []);
+  const { users } = state;
 
   const onCreate = useCallback(() => {
     dispatch({
@@ -90,8 +70,9 @@ function App() {
         email,
       },
     });
+    reset();
     nextId.current += 1;
-  }, [username, email]);
+  }, [username, email, reset]);
 
   const onRemove = useCallback((id) => {
     dispatch({
