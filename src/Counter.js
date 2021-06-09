@@ -1,5 +1,4 @@
 import React, { useReducer } from "react";
-import { useState } from "react";
 
 const reducer = (state, action) => {
   switch (action.type) {
