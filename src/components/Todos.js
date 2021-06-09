@@ -1,6 +1,5 @@
 import React from "react";
 import TodoItem from "./TodoItem";
-
 const Todos = ({
   input,
   todos,
@@ -9,34 +8,32 @@ const Todos = ({
   onToggle,
   onRemove,
 }) => {
+  const onChange = (event) => {
+    onChangeInput(event.target.value);
+  };
   const onSubmit = (event) => {
     event.preventDefault();
     onInsert(input);
     onChangeInput("");
   };
-  const onChange = (event) => {
-    const context = event.target.value;
-    onChangeInput(context);
-  };
   return (
-    <>
+    <div>
       <form onSubmit={onSubmit}>
         <input value={input} onChange={onChange} />
-        <button type="submit">등록</button>
+        <button type="submit">작성</button>
       </form>
       <div>
-        {todos.map((todo) => {
-          return (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggle={onToggle}
-              onRemove={onRemove}
-            />
-          );
-        })}
+        {todos.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={onToggle}
+            onRemove={onRemove}
+          />
+        ))}
       </div>
-    </>
+    </div>
   );
 };
+
 export default Todos;

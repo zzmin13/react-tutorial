@@ -1,33 +1,24 @@
-//1. 액션 타입 정의
+import { createAction, handleActions } from "redux-actions";
+
+// 액션 타입 정의하기
 const CHANGE_INPUT = "todos/CHANGE_INPUT";
 const INSERT = "todos/INSERT";
-const TOGGLE = "totos/TOGGLE";
+const TOGGLE = "todos/TOGGLE";
 const REMOVE = "todos/REMOVE";
 
-//2. 액션 생성 함수 정의
-export const changeInput = (input) => ({
-  type: CHANGE_INPUT,
-  input,
-});
+// 액션 생성 함수 만들기
 let id = 3;
-export const insert = (text) => ({
-  type: INSERT,
-  todo: {
-    id: id++,
-    text,
-    done: false,
-  },
-});
-export const toggle = (id) => ({
-  type: TOGGLE,
-  id,
-});
-export const remove = (id) => ({
-  type: REMOVE,
-  id,
-});
 
-//3. 초기상태와 리듀서 함수 정의
+export const changeInput = createAction(CHANGE_INPUT, (input) => input);
+export const insert = createAction(INSERT, (text) => ({
+  id: id++,
+  text,
+  done: false,
+}));
+export const toggle = createAction(TOGGLE, (id) => id);
+export const remove = createAction(REMOVE, (id) => id);
+
+// 초기 상태 정의, 리듀서 함수 만들기
 const initialState = {
   input: "",
   todos: [
@@ -38,42 +29,31 @@ const initialState = {
     },
     {
       id: 2,
-      text: "리덕스 공부 완료하기",
+      text: "리덕스 공부 끝내기",
       done: false,
     },
   ],
 };
 
-const todos = (state = initialState, action) => {
-  switch (action.type) {
-    case CHANGE_INPUT:
-      return {
-        ...state,
-        input: action.input,
-      };
-    case INSERT:
-      return {
-        ...state,
-        todos: state.todos.concat(action.todo),
-      };
-    case TOGGLE:
-      return {
-        ...state,
-        todos: state.todos.map((todo) => {
-          if (todo.id === action.id) {
-            return { ...todo, done: !todo.done };
-          }
-          return todo;
-        }),
-      };
-    case REMOVE:
-      return {
-        ...state,
-        todos: state.todos.filter((todo) => todo.id !== action.id),
-      };
-    default:
-      return state;
-  }
-};
+const todos = handleActions(
+  {
+    [CHANGE_INPUT]: (state, { payload: input }) => ({ ...state, input }),
+    [INSERT]: (state, { payload: todo }) => ({
+      ...state,
+      todos: state.todos.concat(todo),
+    }),
+    [TOGGLE]: (state, { payload: id }) => ({
+      ...state,
+      todos: state.todos.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      ),
+    }),
+    [REMOVE]: (state, { payload: id }) => ({
+      ...state,
+      todos: state.todos.filter((todo) => todo.id !== id),
+    }),
+  },
+  initialState
+);
 
 export default todos;
