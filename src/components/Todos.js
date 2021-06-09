@@ -11,19 +11,30 @@ const Todos = ({
 }) => {
   const onSubmit = (event) => {
     event.preventDefault();
+    onInsert(input);
+    onChangeInput("");
+  };
+  const onChange = (event) => {
+    const context = event.target.value;
+    onChangeInput(context);
   };
   return (
     <>
       <form onSubmit={onSubmit}>
-        <input />
+        <input value={input} onChange={onChange} />
         <button type="submit">등록</button>
       </form>
       <div>
-        <TodoItem />
-        <TodoItem />
-        <TodoItem />
-        <TodoItem />
-        <TodoItem />
+        {todos.map((todo) => {
+          return (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              onToggle={onToggle}
+              onRemove={onRemove}
+            />
+          );
+        })}
       </div>
     </>
   );
